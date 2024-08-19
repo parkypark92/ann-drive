@@ -1,4 +1,30 @@
 extends layout 
 
 block content 
-  h1 Signup Page
+   h1.text-center.mb-4= title
+   div.d-flex.flex-column.align-items-center
+        if(errors)
+          .alert.alert-danger
+            each error in errors
+              p=error.msg
+        form(method="POST")
+          .mb-3
+            label.form-label(for="first_name") First Name
+            input#first_name.form-control(type="text" name="first_name" required maxlength=20 value=(undefined===user ? "" : user.first_name)) 
+          .mb-3
+            label.form-label(for="last_name") Last Name
+            input#last_name.form-control(type="text" name="last_name" required maxlength=20 value=(undefined===user ? "" : user.last_name)) 
+          .mb-3
+            label.form-label(for="user_name") Username
+            input#user_name.form-control(type="text" name="username" required value=(undefined===user ? "" : user.username)) 
+          .mb-3
+            label.form-label(for="email") Email
+            input#email.form-control(type="email" name="email" required value=(undefined===user ? "" : user.email)) 
+          .mb-3
+            label.form-label(for="password") Create Password
+            input#password.form-control(type="password" name="password" required) 
+          .mb-3 
+            label.form-label(for="confirm_password") Confirm Password 
+            input#confirm_password.form-control(type="password" name="confirm_password" required)
+          button.btn.btn-primary.me-3(type="submit") Sign Up
+          a.btn.btn-primary(href="/") Home
