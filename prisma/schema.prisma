@@ -18,7 +18,14 @@ model user {
   email      String  @unique
   first_name String
   last_name  String
-  username   String
+  username   String  @unique
   salt       String?
   hash       String?
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
 }
