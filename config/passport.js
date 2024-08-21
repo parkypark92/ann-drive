@@ -2,9 +2,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-
 const validatePassword = require("../utils/passwordUtils").validatePassword;
-console.log("here");
 
 const verifyCallback = async (username, password, done) => {
   try {
@@ -27,7 +25,6 @@ const verifyCallback = async (username, password, done) => {
 };
 
 const strategy = new LocalStrategy(verifyCallback);
-
 passport.use(strategy);
 
 passport.serializeUser((user, done) => {
