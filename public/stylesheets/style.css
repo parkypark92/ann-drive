@@ -12,3 +12,12 @@ form,
   width: 100%;
   max-width: 500px;
 }
+
+.icon-ctnr {
+  height: 80px;
+  width: 80px;
+}
+
+.icon-ctnr:hover {
+  scale: 105%;
+}

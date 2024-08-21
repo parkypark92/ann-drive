@@ -1,4 +1,16 @@
 extends layout 
 
 block content 
-  h1 Welcome user
+  .d-flex.align-items-center
+      h3.me-3 Hello #{user.first_name}
+      a.h-50.btn.btn-primary(href="/logout") Logout 
+  h2 My Files
+  .d-flex
+    each folder in user.folders 
+      .icon-ctnr 
+        a.btn.btn-wight.h-100.w-100.d-flex.flex-column.justify-content-center  
+          span(class="bi bi-folder h-75" style="font-size: 50px; display: inline")
+          span.justify-self-end #{folder.name}
+    .icon-ctnr
+      a(href=`/users/${user.id}/create`).btn.btn-wight.h-100.w-100.d-flex.align-items-center
+        i(class="bi bi-folder-plus" style="font-size: 50px;")

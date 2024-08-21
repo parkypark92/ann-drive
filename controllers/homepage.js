@@ -4,7 +4,11 @@ const prisma = new PrismaClient();
 const generatePassword = require("../utils/passwordUtils").generatePassword;
 
 module.exports.homepage_get = (req, res, next) => {
-  res.render("index", { title: "Express", user: req.user });
+  if (req.user) {
+    res.redirect("/users/" + req.user.id);
+  } else {
+    res.render("index", { title: "Home" });
+  }
 };
 
 module.exports.login_get = (req, res, next) => {

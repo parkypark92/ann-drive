@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+  h1.text-center.mb-4=title
+  div.d-flex.flex-column.align-items-center
+    if(messages)
+      .alert.alert-danger 
+        p=messages[0]
+    form(method="POST")
+      .mb-3 
+        label.form-label(for="username") Folder Name
+        input#name.form-control(type="text" name="name" required)
+      button.btn.btn-primary.me-3(type="submit") Create
+      a.btn.btn-primary(href="/") Cancel

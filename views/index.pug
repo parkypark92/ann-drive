@@ -1,9 +1,6 @@
 extends layout
 
 block content
-  if(user)
-    h1 Hello #{user.first_name}
-    a.btn.btn-primary(href="/logout") Logout
-  else  
-    a.btn.btn-primary.me-3(href="/signup") Signup
-    a.btn.btn-primary(href="/login") Login
+    div 
+      a.btn.btn-primary.me-3(href="/signup") Signup
+      a.btn.btn-primary(href="/login") Login
