@@ -1,16 +1,16 @@
 extends layout 
 
 block content 
-  .d-flex.align-items-center
-      h3.me-3 Hello #{user.first_name}
-      a.h-50.btn.btn-primary(href="/logout") Logout 
   h2 My Files
   .d-flex
     each folder in user.folders 
-      .icon-ctnr 
-        a.btn.btn-wight.h-100.w-100.d-flex.flex-column.justify-content-center  
-          span(class="bi bi-folder h-75" style="font-size: 50px; display: inline")
-          span.justify-self-end #{folder.name}
+      div
+        .icon-ctnr.me-3 
+          a(href=`/users/${user.id}/folders/${folder.id}`).p-0.btn.h-100.w-100.d-flex.flex-column.justify-content-center  
+            span(class="bi bi-folder h-75" style="font-size: 50px;")
+            span.folder-text #{folder.name}
+        a(href=`/users/${user.id}/folders/${folder.id}/delete`).btn.float-right
+          i(class="bi bi-trash text-danger")
     .icon-ctnr
-      a(href=`/users/${user.id}/create`).btn.btn-wight.h-100.w-100.d-flex.align-items-center
-        i(class="bi bi-folder-plus" style="font-size: 50px;")
+      a(href=`/users/${user.id}/create`).p-0.btn.h-100.w-100.d-flex.justify-content-center
+        i(class="bi bi-folder-plus text-success" style="font-size: 50px;")

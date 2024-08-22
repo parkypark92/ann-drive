@@ -11,4 +11,11 @@ html
   body
     .container
       h1 Ann Drive
-        block content
+        if(user)
+          .d-flex.align-items-center
+            h3.me-3 Hello #{user.first_name}
+            a.h-50.btn.btn-primary(href="/logout") Logout 
+      block content
+
+        
+        

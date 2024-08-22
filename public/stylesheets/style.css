@@ -3,10 +3,6 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00b7ff;
-}
-
 form,
 .alert {
   width: 100%;
@@ -20,4 +16,18 @@ form,
 
 .icon-ctnr:hover {
   scale: 105%;
+}
+
+.folder-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 80px;
+}
+
+/*.folder-text:hover {
+  overflow: visible;
+  position: absolute;
+  background-color: rgb(235, 235, 235);
+  max-width: 20em;
 }
