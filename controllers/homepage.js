@@ -4,6 +4,8 @@ const prisma = new PrismaClient();
 const generatePassword = require("../utils/passwordUtils").generatePassword;
 
 module.exports.homepage_get = (req, res, next) => {
+  console.log(req.sessionID);
+  console.log(req.session);
   if (req.user) {
     res.redirect("/users/" + req.user.id);
   } else {

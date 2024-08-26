@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
     cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // ms
+      maxAge: 24 * 60 * 60 * 1000, // ms
     },
     secret: "a santa at nasa",
     resave: true,
