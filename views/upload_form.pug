@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+  h1.text-center.mb-4 Select a File to upload
+  div.d-flex.flex-column.align-items-center
+    if(messages)
+      .alert.alert-danger 
+        p=messages[0]
+    form(method="POST" enctype="multipart/form-data")
+      .mb-3 
+        input#uploaded_file.form-control(type="file" name="uploaded_file" required)
+      button.btn.btn-primary.me-3(type="submit") Upload
+      a.btn.btn-primary(href="/") Home
+  

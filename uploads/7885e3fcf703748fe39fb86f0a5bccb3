@@ -1,0 +1,193 @@
+//install express-session and connect-mongo
+npm i express-session
+//mongo
+npm i connect-mongo
+//prisma
+npm install @quixo3/prisma-session-store express-session
+
+//require in app.js
+const session = require("express-session");
+//mongo
+const MongoStore = require("connect-mongo");
+//prisma
+const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
+const { PrismaClient } = require('@prisma/client');
+
+
+//create a session store and setup initiate session middleware, just before routes middleware
+//mongo
+const sessionStore = MongoStore.create({
+  mongoUrl: 'your_connection_string',
+  collectionName: "sessions",
+});
+
+app.use(
+  session({
+    secret: "randomString",
+    resave: false,
+    saveUninitialized: true,
+    store: sessionStore,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24,
+    },
+  })
+);
+//prisma
+app.use(
+  expressSession({
+    cookie: {
+     maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+    },
+    secret: 'a santa at nasa',
+    resave: true,
+    saveUninitialized: true,
+    store: new PrismaSessionStore(
+      new PrismaClient(),
+      {
+        checkPeriod: 2 * 60 * 1000,  //ms
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }
+    )
+  })
+);
+//in prisma you must make a session model in schema
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   
+  expiresAt   DateTime
+} 
+
+//initialize passport in app.js
+app.use(passport.initialize()); //checks req.session.passport.user for a user object
+app.use(passport.session()); //passes user.id to deserializeUser function
+
+//in utils > passwordUtils.js
+const crypto = require("crypto");
+
+function generatePassword(password) {
+  const salt = crypto.randomBytes(32).toString("hex");
+  const hash = crypto
+    .pbkdf2Sync(password, salt, 10000, 64, "sha512")
+    .toString("hex");
+  return { salt: salt, hash: hash };
+}
+
+function validatePassword(password, salt, hash) {
+  const hashVerify = crypto
+    .pbkdf2Sync(password, salt, 10000, 64, "sha512")
+    .toString("hex");
+  return hash === hashVerify;
+}
+
+module.exports.generatePassword = generatePassword;
+module.exports.validatePassword = validatePassword;
+
+//in config > passport.js
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+const validatePassword = require("../utils/passwordUtils").validatePassword;
+
+const verifyCallback = async (username, password, done) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        username: username,
+      },
+    });
+    if (!user) done(null, false, { message: "Incorrect username or password" });
+    const isValid = validatePassword(password, user.salt, user.hash);
+    if (isValid) {
+      //user is passed to serializeUser
+      return done(null, user, { message: "Success" });
+    } else {
+      return done(null, false, { message: "Incorrect username or password" });
+    }
+  } catch (err) {
+    done(err);
+  }
+};
+
+const strategy = new LocalStrategy(verifyCallback);
+
+passport.use(strategy);
+
+passport.serializeUser((user, done) => {
+  //req.session.passport.user is set to user.id
+  done(null, user.id);
+});
+
+//if id is valid, sets req.user to the user object
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
+});
+
+//on sign up POST controller
+//imports
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+const generatePassword = require("../utils/passwordUtils").generatePassword;
+
+module.exports.signup_post = async (req, res, next) => {
+  const hashAndSalt = generatePassword(req.body.password);
+  const salt = hashAndSalt.salt;
+  const hash = hashAndSalt.hash;
+  await prisma.user.create({
+    data: {
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      username: req.body.username,
+      email: req.body.email,
+      salt: salt,
+      hash: hash,
+    },
+  });
+  res.redirect("/");
+};
+
+//on login POST route
+//imports
+const passport = require("passport");
+require("../config/passport");
+
+router.post(
+  "/login", (req, res, next) => {
+  req.session.messages = [];
+  next();
+};,
+  passport.authenticate("local", {
+    failureRedirect: "/login?success=false",
+    failureMessage: true,
+    successRedirect: "/",
+  })
+);
+
+//on login GET
+module.exports.login_get = (req, res, next) => {
+  if (req.user) res.redirect("/");
+  if (req.query.success === "false") {
+    res.render("login", { title: "Login", messages: req.session.messages });
+  } else {
+    res.render("login", { title: "Login" });
+  }
+};
+
+//on logout GET controller
+exports.logout_get = (req, res, next) => {
+  req.logout((err) => {
+    if (err) next(err);
+    res.redirect("/");
+  });
+}; 

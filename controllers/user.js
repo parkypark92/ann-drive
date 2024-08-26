@@ -60,3 +60,7 @@ module.exports.delete_folder_post = asyncHandler(async (req, res, next) => {
   });
   res.redirect("/");
 });
+
+module.exports.upload_form_get = (req, res, next) => {
+  res.render("upload_form", { title: "Upload", user: req.user });
+};

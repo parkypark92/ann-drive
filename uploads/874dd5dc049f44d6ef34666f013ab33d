@@ -1,0 +1,63 @@
+EXPRESS APP
+
+//install express generator
+npm install express-generator -g
+
+//generate express app with preferred view template
+express app-name --view=pug
+
+//install dependencies
+npm install
+
+//install nodemon for server restart on save
+npm install --save-dev nodemon
+
+//set up scripts for running server
+"scripts": {
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www",
+    "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart"
+  }
+  
+//DATABASE (MongoDB)
+//install mongoose
+npm install mongoose
+
+// Set up mongoose connection
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
+const mongoDB = "insert_your_database_url_here";
+
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
+
+//MODELS
+//create models folder in root directory for schema files 
+//create schema for each collection in the database
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const BookSchema = new Schema({
+  title: { type: String, required: true },
+  author: { type: Schema.Types.ObjectId, ref: "Author", required: true },
+  summary: { type: String, required: true },
+  isbn: { type: String, required: true },
+  genre: [{ type: Schema.Types.ObjectId, ref: "Genre" }],
+});
+
+BookSchema.virtual("url").get(function () {
+  return `/catalog/book/${this._id}`;
+});
+
+module.exports = mongoose.model("Book", BookSchema);
+
+//CONTROLLERS
+//create controllers folder in route directory. This contains files with callback functions (middleware) for your routes
+//wrap these in express async handler to handle errors
+npm install express-async-handler
+
+exports.index = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Site Home Page");
+});
+
