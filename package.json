@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "@quixo3/prisma-session-store": "^3.1.13",
+    "@supabase/supabase-js": "^2.45.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
     "express-session": "^1.18.0",
@@ -23,6 +25,7 @@
   },
   "devDependencies": {
     "@prisma/client": "^5.18.0",
+    "base64-arraybuffer": "^1.0.2",
     "nodemon": "^3.1.4",
     "prisma": "^5.18.0"
   }

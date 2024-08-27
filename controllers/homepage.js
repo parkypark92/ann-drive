@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const generatePassword = require("../utils/passwordUtils").generatePassword;
+const supabase = require("../config/supabase").supabase;
+const { decode } = require("base64-arraybuffer");
 
 module.exports.homepage_get = (req, res, next) => {
   if (req.user) {
@@ -40,7 +42,7 @@ module.exports.signup_post = asyncHandler(async (req, res, next) => {
   const hashAndSalt = generatePassword(req.body.password);
   const salt = hashAndSalt.salt;
   const hash = hashAndSalt.hash;
-  await prisma.user.create({
+  const newUser = await prisma.user.create({
     data: {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
@@ -50,5 +52,11 @@ module.exports.signup_post = asyncHandler(async (req, res, next) => {
       hash: hash,
     },
   });
+  console.log(supabase);
+  const { data, error } = await supabase.storage.createBucket(newUser.id, {
+    public: true,
+  });
+  console.log(data);
+  console.log(error);
   res.redirect("/");
 });

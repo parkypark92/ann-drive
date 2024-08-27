@@ -3,7 +3,10 @@ var router = express.Router();
 const controller = require("../controllers/user");
 const isAuth = require("../config/passport").isAuth;
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+const supabase = require("../config/supabase");
+const { decode } = require("base64-arraybuffer");
 
 router.get("/:id", isAuth, controller.user_homepage_get);
 router.get("/:id/folders/:folderId", isAuth, controller.folder_get);
