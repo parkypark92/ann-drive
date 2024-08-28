@@ -20,9 +20,9 @@ router.post(
   isAuth,
   controller.delete_folder_post
 );
-router.get("/:id/upload", isAuth, controller.upload_form_get);
+router.get("/:id/folders/:folderId/upload", isAuth, controller.upload_form_get);
 router.post(
-  "/:id/upload",
+  "/:id/folders/:folderId/upload",
   isAuth,
   upload.single("uploaded_file"),
   controller.upload_form_post

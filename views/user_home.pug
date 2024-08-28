@@ -2,8 +2,6 @@ extends layout
 
 block content 
   h2 My Files
-  .mb-3
-    a(href=`/users/${user.id}/upload`) Upload a file 
   .d-flex
     each folder in user.folders 
       div

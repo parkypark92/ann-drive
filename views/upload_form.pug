@@ -1,7 +1,8 @@
 extends layout 
 
 block content 
-  h1.text-center.mb-4 Select a File to upload
+  h2=folder.name
+  h3.text-center.mb-4 Select a File to upload
   div.d-flex.flex-column.align-items-center
     if(messages)
       .alert.alert-danger 

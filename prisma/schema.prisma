@@ -29,6 +29,15 @@ model folder {
   name   String
   user   user   @relation(fields: [userId], references: [id])
   userId String
+  files  file[]
+}
+
+model file {
+  id       String @id @default(uuid())
+  name     String
+  url      String
+  folder   folder @relation(fields: [folderId], references: [id])
+  folderId String
 }
 
 model Session {

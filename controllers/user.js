@@ -21,6 +21,9 @@ module.exports.folder_get = asyncHandler(async (req, res, next) => {
     where: {
       id: req.params.folderId,
     },
+    include: {
+      files: true,
+    },
   });
   res.render("folder", { title: "Folder", folder: folder, user: req.user });
 });
@@ -63,38 +66,47 @@ module.exports.delete_folder_post = asyncHandler(async (req, res, next) => {
   res.redirect("/");
 });
 
-module.exports.upload_form_get = (req, res, next) => {
-  res.render("upload_form", { title: "Upload", user: req.user });
-};
+module.exports.upload_form_get = asyncHandler(async (req, res, next) => {
+  const folder = await prisma.folder.findUnique({
+    where: {
+      id: req.params.folderId,
+    },
+  });
+  res.render("upload_form", { title: "Upload", user: req.user, folder });
+});
 
 module.exports.upload_form_post = asyncHandler(async (req, res, next) => {
   try {
     const newFile = req.file;
-
     if (!newFile) {
       res.status(400).json({ message: "Please upload a file" });
       return;
     }
-
-    // decode file buffer to base64
     const fileBase64 = decode(newFile.buffer.toString("base64"));
-
-    // upload the file to supabase
     const { data, error } = await supabase.storage
       .from(req.user.id)
       .upload(newFile.originalname, fileBase64);
-
     if (error) {
       throw error;
     }
-
-    // get public url of the uploaded file
     const { data: file } = supabase.storage
       .from(req.user.id)
       .getPublicUrl(data.path);
+    await prisma.folder.update({
+      where: {
+        id: req.params.folderId,
+      },
+      data: {
+        files: {
+          create: {
+            name: data.path,
+            url: file.publicUrl,
+          },
+        },
+      },
+    });
 
-    console.log(file);
-    res.status(200).json({ file: file.publicUrl });
+    res.redirect(`/users/${req.user.id}/folders/${req.params.folderId}`);
   } catch (error) {
     console.log(error);
   }

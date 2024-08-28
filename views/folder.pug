@@ -2,4 +2,10 @@ extends layout
 
 block content 
   h2 #{folder.name}
+  .mb-3
+    a(href=`/users/${user.id}/folders/${folder.id}/upload`) Upload a file 
+  .mb-3.d-flex
+    each file in folder.files 
+      .border.border-dark
+        p=file.name
   a(href=`/users/${user.id}`) Home
