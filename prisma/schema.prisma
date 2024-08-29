@@ -33,11 +33,13 @@ model folder {
 }
 
 model file {
-  id       String @id @default(uuid())
-  name     String
-  url      String
-  folder   folder @relation(fields: [folderId], references: [id])
-  folderId String
+  id         String   @id @default(uuid())
+  name       String
+  mimetype   String   @default("unknown")
+  url        String
+  uploadedAt DateTime @default(now())
+  folder     folder   @relation(fields: [folderId], references: [id])
+  folderId   String
 }
 
 model Session {

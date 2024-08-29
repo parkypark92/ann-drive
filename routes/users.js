@@ -27,5 +27,6 @@ router.post(
   upload.single("uploaded_file"),
   controller.upload_form_post
 );
+router.get("/:id/folders/:folderId/:fileId", isAuth, controller.file_get);
 
 module.exports = router;

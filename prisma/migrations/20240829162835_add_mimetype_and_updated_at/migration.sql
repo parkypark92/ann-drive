@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "file" ADD COLUMN     "mimetype" TEXT NOT NULL DEFAULT 'unknown',
+ADD COLUMN     "uploadedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

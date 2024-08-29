@@ -6,6 +6,11 @@ block content
     a(href=`/users/${user.id}/folders/${folder.id}/upload`) Upload a file 
   .mb-3.d-flex
     each file in folder.files 
-      .border.border-dark
-        p=file.name
+      div
+        .icon-ctnr.me-3 
+          a(href=`/users/${user.id}/folders/${folder.id}/${file.id}`).p-0.btn.h-100.w-100.d-flex.flex-column.justify-content-center  
+            span(class="bi bi-file-earmark-text h-75" style="font-size: 50px;")
+            span.folder-text #{file.name}
+        a(href=`/users/${user.id}/folders/${folder.id}/${file.id}/delete`).btn.float-right
+          i(class="bi bi-trash text-danger")
   a(href=`/users/${user.id}`) Home

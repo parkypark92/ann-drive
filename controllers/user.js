@@ -101,6 +101,7 @@ module.exports.upload_form_post = asyncHandler(async (req, res, next) => {
           create: {
             name: data.path,
             url: file.publicUrl,
+            mimetype: newFile.mimetype,
           },
         },
       },
@@ -110,4 +111,13 @@ module.exports.upload_form_post = asyncHandler(async (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+module.exports.file_get = asyncHandler(async (req, res, next) => {
+  const file = await prisma.file.findUnique({
+    where: {
+      id: req.params.fileId,
+    },
+  });
+  res.render("file", { title: "File", file });
 });
