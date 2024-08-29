@@ -28,5 +28,10 @@ router.post(
   controller.upload_form_post
 );
 router.get("/:id/folders/:folderId/:fileId", isAuth, controller.file_get);
+router.get(
+  "/:id/folders/:folderId/:fileId/download",
+  isAuth,
+  controller.download_get
+);
 
 module.exports = router;

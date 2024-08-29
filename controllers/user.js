@@ -119,5 +119,14 @@ module.exports.file_get = asyncHandler(async (req, res, next) => {
       id: req.params.fileId,
     },
   });
-  res.render("file", { title: "File", file });
+  res.render("file", { title: "File Details", file, user: req.user });
+});
+
+module.exports.download_get = asyncHandler(async (req, res, next) => {
+  const fileToDownload = await prisma.file.findUnique({
+    where: {
+      id: req.params.fileId,
+    },
+  });
+  res.redirect(fileToDownload.url + "?download");
 });

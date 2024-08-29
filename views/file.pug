@@ -1,6 +1,11 @@
 extends layout 
 
 block content 
-  p Name: #{file.name}
-  p Type: #{file.mimetype}
-  p Uploaded: #{file.uploadedAt}
+  h2=title
+  .mb-3.p-3.border
+    p Name: #{file.name}
+    p Type: #{file.mimetype}
+    p Uploaded: #{file.uploadedAt} 
+    a.btn.btn-success(href=`/users/${user.id}/folders/${file.folderId}/${file.id}/download`) Download
+  a.me-3.btn.btn-primary(href=`/users/${user.id}/folders/${file.folderId}`) Back to Folder 
+  a.btn.btn-primary(href=`/users/${user.id}`) Home
