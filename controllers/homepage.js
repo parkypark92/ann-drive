@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const generatePassword = require("../utils/passwordUtils").generatePassword;
+const { validationResult } = require("express-validator");
 const supabase = require("../config/supabase").supabase;
 
 module.exports.homepage_get = (req, res, next) => {
@@ -13,7 +14,9 @@ module.exports.homepage_get = (req, res, next) => {
 };
 
 module.exports.login_get = (req, res, next) => {
-  if (req.user) res.redirect("/");
+  if (req.user) {
+    res.redirect("/");
+  }
   if (req.query.success === "false") {
     res.render("login", { title: "Login", messages: req.session.messages });
   } else {
@@ -38,21 +41,36 @@ module.exports.signup_get = (req, res, next) => {
 };
 
 module.exports.signup_post = asyncHandler(async (req, res, next) => {
-  const hashAndSalt = generatePassword(req.body.password);
-  const salt = hashAndSalt.salt;
-  const hash = hashAndSalt.hash;
-  const newUser = await prisma.user.create({
-    data: {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const signupDetails = {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       username: req.body.username,
       email: req.body.email,
-      salt: salt,
-      hash: hash,
-    },
-  });
-  const { data, error } = await supabase.storage.createBucket(newUser.id, {
-    public: true,
-  });
-  res.redirect("/");
+    };
+    res.render("signup", {
+      title: "Signup",
+      details: signupDetails,
+      errors: errors.array(),
+    });
+  } else {
+    const hashAndSalt = generatePassword(req.body.password);
+    const salt = hashAndSalt.salt;
+    const hash = hashAndSalt.hash;
+    const newUser = await prisma.user.create({
+      data: {
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        username: req.body.username,
+        email: req.body.email,
+        salt: salt,
+        hash: hash,
+      },
+    });
+    const { data, error } = await supabase.storage.createBucket(newUser.id, {
+      public: true,
+    });
+    res.redirect("/");
+  }
 });

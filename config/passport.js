@@ -11,7 +11,9 @@ const verifyCallback = async (username, password, done) => {
         username: username,
       },
     });
-    if (!user) done(null, false, { message: "Incorrect username or password" });
+    if (!user) {
+      return done(null, false, { message: "Incorrect username or password" });
+    }
     const isValid = validatePassword(password, user.salt, user.hash);
     if (isValid) {
       //user is passed to serializeUser
