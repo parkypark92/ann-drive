@@ -37,7 +37,7 @@ module.exports.reset_messages = (req, res, next) => {
 };
 
 module.exports.signup_get = (req, res, next) => {
-  res.render("signup", { title: "Signup" });
+  res.render("signup", { title: "Sign up" });
 };
 
 module.exports.signup_post = asyncHandler(async (req, res, next) => {

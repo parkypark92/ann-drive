@@ -33,5 +33,10 @@ router.get(
   isAuth,
   controller.download_get
 );
+router.post(
+  "/:id/folders/:folderId/:fileId/delete",
+  isAuth,
+  controller.delete_file_post
+);
 
 module.exports = router;

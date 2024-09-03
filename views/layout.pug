@@ -12,7 +12,9 @@ html
     .container.mt-5
       nav.navbar.fixed-top.border-bottom.navbar-dark.bg-dark
         .container
-          h1.navbar-brand.mb-0 Ann Drive
+          div
+            span.bi.bi-folder.text-light.me-2
+            span.navbar-brand.mb-0 Ann Drive
           if(user)
             .d-flex.align-items-center
               span.me-3.navbar-text Hello #{user.first_name}

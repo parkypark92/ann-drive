@@ -1,0 +1,10 @@
+extends layout 
+
+block content 
+  h3 Are you sure you want to delete this file?
+  hr
+  h2 #{file.name}
+  form(method="POST")
+    input(type="hidden" name="file_id" value=file.id) 
+    button.btn.btn-danger.mb-3(type="submit") Delete 
+  a(href=`/`).btn.btn-primary Cancel

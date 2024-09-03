@@ -130,3 +130,27 @@ module.exports.download_get = asyncHandler(async (req, res, next) => {
   });
   res.redirect(fileToDownload.url + "?download");
 });
+
+module.exports.delete_file_get = asyncHandler(async (req, res, next) => {
+  const file = await prisma.file.findUnique({
+    where: {
+      id: req.params.fileId,
+    },
+  });
+  res.render("delete_file", { title: "Delete File", file });
+});
+
+module.exports.delete_file_post = asyncHandler(async (req, res, next) => {
+  const fileToDelete = await prisma.file.delete({
+    where: {
+      id: req.body.file_id,
+    },
+  });
+  const { data, error } = await supabase.storage
+    .from(req.user.id)
+    .remove([fileToDelete.name]);
+  if (error) {
+    throw error;
+  }
+  res.redirect(`/users/${req.params.id}/folders/${req.params.folderId}`);
+});
